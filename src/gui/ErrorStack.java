@@ -53,4 +53,9 @@ public class ErrorStack extends JPanel {
 		
 		errorText.setText(errorMsg);
 	}
+	
+	
+	public void printError(String msg) {
+		errorText.setText(msg);
+	}
 }

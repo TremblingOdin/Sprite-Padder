@@ -24,6 +24,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import images.GridObject;
+import images.ImageStitcher;
+
 
 /**
  * Main Frame class for the application, hosts the other GUI images
@@ -149,8 +152,42 @@ public class MainFrame extends JFrame {
 		genButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				stackPane.printError("Attempting to generate image");
 				if(!(xdimOrg.getText().equals("") || ydimOrg.getText().equals("") || xdimChange.getText().equals("") || ydimChange.getText().equals(""))) {
+					String xdimString = xdimOrg.getText();
+					String ydimString = ydimOrg.getText();
 					
+					//I think this is the right regex, the original dimensions have to be positive, the change dimensions may be negative
+					if(!(xdimString.matches("^[0-9]+") && ydimString.matches("^[0-9]+"))) {
+						stackPane.printError("Please only use positive integers for the X dimension and Y dimension");
+						return;
+					}
+					
+					int xdim = Integer.parseInt(xdimString);
+					int ydim = Integer.parseInt(ydimString);
+					
+					int maxWidth = orgImage.getImage().getWidth();
+					int maxHeight = orgImage.getImage().getHeight();
+					
+					stackPane.printError("Processing image cells");
+					
+					GridObject[] cells = new GridObject[(maxWidth*maxHeight)/(xdim*ydim)];
+					System.out.println(cells.length);
+					int cellIndex = 0;
+					//Go through row by row by cell
+					for(int i = 0; i < maxWidth; i += xdim) {
+						for(int j = 0; j < maxHeight; j += ydim) {
+							cells[cellIndex++] = new GridObject(xdim, ydim, orgImage.getImage().getSubimage(i, j, xdim, ydim));
+						}
+					}
+					
+					try{
+						ImageStitcher stitch = new ImageStitcher(cells, maxHeight/ydim, xdim, ydim);
+						newImage.setImage(stitch.getBigImage());
+					} catch (Exception er) {
+						er.printStackTrace();
+						stackPane.printError(er.getStackTrace());
+					}
 				}
 			}
 		});

@@ -87,6 +87,14 @@ public class ImagePanel extends JPanel {
 	}
 	
 	/**
+	 * Return the image
+	 * @return
+	 */
+	public BufferedImage getImage() {
+		return this.image;
+	}
+	
+	/**
 	 * Generates the new image based off the old
 	 * @param Graphics
 	 */
