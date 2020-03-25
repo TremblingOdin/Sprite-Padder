@@ -84,6 +84,7 @@ public class ImageStitcher {
 	
 	/**
 	 * Puts together a final image from rows of images
+	 * The sheer size of some images discourages using arrays, use arraylists
 	 * @param rows
 	 * @param height
 	 * @return BufferedImage

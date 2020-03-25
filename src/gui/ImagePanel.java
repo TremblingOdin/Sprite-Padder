@@ -1,17 +1,11 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  * Displays the new graphic for the user to visually check
@@ -29,7 +23,6 @@ public class ImagePanel extends JPanel {
 	private int orgWidth;
 	private int orgHeight;
 	
-	private boolean zoomChange;
 	
 	/**
 	 * Creates the image panel with the provided image
@@ -43,7 +36,6 @@ public class ImagePanel extends JPanel {
 		this.image = image;
 		
 		zoomLevel = 1;
-		zoomChange = false;
 		
 		orgWidth = width;
 		orgHeight = height;

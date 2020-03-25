@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import images.GridObject;
 import images.ImageStitcher;
@@ -59,6 +60,8 @@ public class MainFrame extends JFrame {
 	private final JButton genButton;          // generate image button
 	private final JButton openButton;		  // open image button
 	private final JButton saveButton;         // save image button
+	
+	private final FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "png", "jpg", "bmp", ".png", ".jpg"); // image files only
 	
 	public MainFrame self;                    // needed this for the button events
 	
@@ -128,6 +131,8 @@ public class MainFrame extends JFrame {
 				try {
 					JFileChooser fileChooser = new JFileChooser();
 					fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+					fileChooser.setFileFilter(filter);
+					
 					int result = fileChooser.showOpenDialog(self);
 					
 					if(result == JFileChooser.APPROVE_OPTION) {
@@ -152,6 +157,8 @@ public class MainFrame extends JFrame {
 				if(!(xdimOrg.getText().equals("") || ydimOrg.getText().equals("") || xdimChange.getText().equals("") || ydimChange.getText().equals(""))) {
 					String xdimString = xdimOrg.getText();
 					String ydimString = ydimOrg.getText();
+					String xchangeString = xdimChange.getText();
+					String ychangeString = ydimChange.getText();
 					
 					//I think this is the right regex, the original dimensions have to be positive, the change dimensions may be negative
 					if(!(xdimString.matches("^[0-9]+") && ydimString.matches("^[0-9]+"))) {
@@ -161,6 +168,8 @@ public class MainFrame extends JFrame {
 					
 					int xdim = Integer.parseInt(xdimString);
 					int ydim = Integer.parseInt(ydimString);
+					int xchange = Integer.parseInt(xchangeString);
+					int ychange = Integer.parseInt(ychangeString);
 					
 					int maxWidth = orgImage.getImage().getWidth();
 					int maxHeight = orgImage.getImage().getHeight();
@@ -170,23 +179,23 @@ public class MainFrame extends JFrame {
 					GridObject[] cells = new GridObject[(maxWidth*maxHeight)/(xdim*ydim)];
 					int cellIndex = 0;
 					//Go through row by row by cell
-					for(int i = 0; i < maxWidth; i += ydim) {
-						for(int j = 0; j < maxHeight; j += xdim) {
-							System.out.println("y:" + i + ", x:" + j );
-							cells[cellIndex] = new GridObject(xdim, ydim, orgImage.getImage().getSubimage(j, i, xdim, ydim));
-							//System.out.println(cells[cellIndex].getNewCell().getHeight());
+					for(int i = 0; i < maxWidth; i += ydim) { //I always forget so I'm reminding myself, go through each y = row by row
+						for(int j = 0; j < maxHeight; j += xdim) { //go through each x = column by column
+							cells[cellIndex] = new GridObject(xdim+xchange, ydim+ychange, orgImage.getImage().getSubimage(j, i, xdim, ydim));
 							cellIndex++;
 						}
 					}
 					
 					try{
-						ImageStitcher stitch = new ImageStitcher(cells, maxHeight/ydim, xdim, ydim);
+						ImageStitcher stitch = new ImageStitcher(cells, maxHeight/ydim, xdim+xchange, ydim+ychange);
 						newImage.setImage(stitch.getBigImage());
 					} catch (Exception er) {
 						er.printStackTrace();
 						stackPane.printError(er.getStackTrace());
 					}
 				}
+				
+				saveButton.setEnabled(true);
 			}
 		});
 		
@@ -196,7 +205,21 @@ public class MainFrame extends JFrame {
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setDialogTitle("Save File");
+					fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+					fileChooser.setFileFilter(filter);
+					
+					int result = fileChooser.showSaveDialog(self);
+					
+					if(result == JFileChooser.APPROVE_OPTION) {
+						File selectedFile = fileChooser.getSelectedFile();
+						ImageIO.write(newImage.getImage(), "png", selectedFile);
+					}
+				} catch (IOException e1) {
+					stackPane.printError(e1.getStackTrace());
+				}
 			}
 		});
 		
