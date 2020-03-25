@@ -17,13 +17,12 @@ public class ImageStitcher {
 	 * @throws IOException
 	 */
 	public ImageStitcher(GridObject[] pieces, int columns, int width, int height) throws IOException {
-		int totalSize = 0;
-		for(int i = 0; i < pieces.length; i++) {
+		//double totalSize = 0;
+		/*for(int i = 0; i < pieces.length; i++) {
 			totalSize += pieces[i].getNewImage().length;
-		}
+		}*/
 		
 		int index = 0;
-		System.out.println(totalSize);
 		//byte[] bigArray = new byte[totalSize];
 		//for(int i = 0; i < pieces.length; i++) {
 		//	int newIndex = index + pieces[i].getNewImage().length;
@@ -36,7 +35,8 @@ public class ImageStitcher {
 		
 		ArrayList<ArrayList<BufferedImage>> imageStrips = new ArrayList<ArrayList<BufferedImage>>();
 		
-		while(index < (int)(pieces.length/columns)) {
+		int maxSize = pieces.length/columns;
+		while(index < (int)(maxSize)) {
 			ArrayList<BufferedImage> imageStrip = new ArrayList<BufferedImage>();
 			for(int i = 0; i < columns; i++) {
 				imageStrip.add(pieces[i+(columns*index)].getNewCell());

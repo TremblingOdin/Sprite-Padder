@@ -22,28 +22,29 @@ public class GridObject {
 	 * @param baseImageCell
 	 */
 	public GridObject(int newWidth, int newHeight, BufferedImage baseImageCell) {
-		newRGBArray = new int[newWidth][newHeight][4];
+		this.newRGBArray = new int[newWidth][newHeight][4];
+		this.baseCell = baseImageCell;
 		
-		oldPixels =((DataBufferByte) baseImageCell.getRaster().getDataBuffer()).getData();
-		baseRBGArray = new int[baseImageCell.getWidth()][baseImageCell.getHeight()][4];
-		hasAlpha = baseImageCell.getAlphaRaster() != null;
+		this.oldPixels =((DataBufferByte) baseImageCell.getRaster().getDataBuffer()).getData();
+		this.baseRBGArray = new int[baseImageCell.getWidth()][baseImageCell.getHeight()][4];
+		this.hasAlpha = baseImageCell.getAlphaRaster() != null;
 		
-		if(hasAlpha) pixelDataLength = 4;
-		else pixelDataLength = 3;
+		if(this.hasAlpha) this.pixelDataLength = 4;
+		else this.pixelDataLength = 3;
 		
 		generateNewCell();
 	}
 	
 	public void generateNewCell() {
-		newPixels = oldPixels;
-		newCell = baseCell;
+		this.newPixels = this.oldPixels;
+		this.newCell = this.baseCell;
 	}
 	
 	public byte[] getNewImage() {
-		return newPixels;
+		return this.newPixels;
 	}
 	
 	public BufferedImage getNewCell() {
-		return newCell;
+		return this.newCell;
 	}
 }

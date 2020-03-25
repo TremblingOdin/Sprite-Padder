@@ -75,11 +75,9 @@ public class MainFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e)) {
 					orgImage.zoom();
-					System.out.println("leftClick");
 				}
 				else if (SwingUtilities.isRightMouseButton(e)) {
 					orgImage.unzoom();
-					System.out.println("rightClick");
 				}
 			}
 		});
@@ -89,11 +87,9 @@ public class MainFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e)) {
 					newImage.zoom();
-					System.out.println("leftClick");
 				}
 				else if (SwingUtilities.isRightMouseButton(e)) {
 					newImage.unzoom();
-					System.out.println("rightClick");
 				}
 			}
 		});
@@ -172,12 +168,14 @@ public class MainFrame extends JFrame {
 					stackPane.printError("Processing image cells");
 					
 					GridObject[] cells = new GridObject[(maxWidth*maxHeight)/(xdim*ydim)];
-					System.out.println(cells.length);
 					int cellIndex = 0;
 					//Go through row by row by cell
-					for(int i = 0; i < maxWidth; i += xdim) {
-						for(int j = 0; j < maxHeight; j += ydim) {
-							cells[cellIndex++] = new GridObject(xdim, ydim, orgImage.getImage().getSubimage(i, j, xdim, ydim));
+					for(int i = 0; i < maxWidth; i += ydim) {
+						for(int j = 0; j < maxHeight; j += xdim) {
+							System.out.println("y:" + i + ", x:" + j );
+							cells[cellIndex] = new GridObject(xdim, ydim, orgImage.getImage().getSubimage(j, i, xdim, ydim));
+							//System.out.println(cells[cellIndex].getNewCell().getHeight());
+							cellIndex++;
 						}
 					}
 					
