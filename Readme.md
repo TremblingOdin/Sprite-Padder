@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # ImagePad v1.1
+=======
+# ImagePad v1
+>>>>>>> a8598b54444d958ab86a85f966a92eff0a2314f4
 
 The intent of this application is to quickly add padding to a sprite sheet. I decided to make it instead of manually adding padding to 3 different sprite sheets while developing a game.
 
