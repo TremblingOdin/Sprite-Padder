@@ -172,8 +172,6 @@ public class MainFrame extends JFrame {
 					int xchange = Integer.parseInt(xchangeString);
 					int ychange = Integer.parseInt(ychangeString);
 					
-					System.out.println(xchange);
-					
 					int maxWidth = orgImage.getImage().getWidth();
 					int maxHeight = orgImage.getImage().getHeight();
 					
