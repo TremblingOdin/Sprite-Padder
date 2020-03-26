@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -171,23 +172,53 @@ public class MainFrame extends JFrame {
 					int xchange = Integer.parseInt(xchangeString);
 					int ychange = Integer.parseInt(ychangeString);
 					
+					System.out.println(xchange);
+					
 					int maxWidth = orgImage.getImage().getWidth();
 					int maxHeight = orgImage.getImage().getHeight();
 					
+					if(maxWidth%xdim != 0 || maxHeight%ydim != 0) {
+						int confirm = JOptionPane.showConfirmDialog(null, "The dimensions you entered don't perfectly fit the image. Continuing may result in sprites near the edges being cut off. Continue?");
+						//0=yes 1=no 2=cancel
+						if(confirm > 0) {
+							return;
+						}
+						
+						//Some people might not have their cells exactly fit image size, I'm going to cut it short and ask them if they want to continur
+						//doing if statements and modulos wasn't mathing right
+						int adjustWidth = 0;
+						while((adjustWidth+xdim < maxWidth-1)) {
+							adjustWidth += xdim;
+						}
+						
+						maxWidth = adjustWidth;
+						
+						int adjustHeight = 0;
+						while((adjustHeight+ydim < maxHeight-1)) {
+							adjustHeight += ydim;
+						}
+						
+						maxHeight = adjustHeight;
+					}
+					
 					stackPane.printError("Processing image cells");
+					
+					int xdimChange = xdim + 2*(xchange);
+					int ydimChange = ydim +2*(ychange);
 					
 					GridObject[] cells = new GridObject[(maxWidth*maxHeight)/(xdim*ydim)];
 					int cellIndex = 0;
+					
 					//Go through row by row by cell
 					for(int i = 0; i < maxWidth; i += ydim) { //I always forget so I'm reminding myself, go through each y = row by row
 						for(int j = 0; j < maxHeight; j += xdim) { //go through each x = column by column
-							cells[cellIndex] = new GridObject(xdim+xchange, ydim+ychange, orgImage.getImage().getSubimage(j, i, xdim, ydim));
+							cells[cellIndex] = new GridObject(xdimChange, ydimChange, orgImage.getImage().getSubimage(j, i, xdim, ydim));
 							cellIndex++;
 						}
 					}
 					
 					try{
-						ImageStitcher stitch = new ImageStitcher(cells, maxHeight/ydim, xdim+xchange, ydim+ychange);
+						ImageStitcher stitch = new ImageStitcher(cells, maxHeight/ydim, xdimChange, ydimChange);
 						newImage.setImage(stitch.getBigImage());
 					} catch (Exception er) {
 						er.printStackTrace();
