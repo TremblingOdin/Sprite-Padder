@@ -1,4 +1,4 @@
-# ImagePad v1.1
+# Sprite-Padder v1.1
 
 The intent of this application is to quickly add padding to a sprite sheet. I decided to make it instead of manually adding padding to 3 different sprite sheets while developing a game.
 
